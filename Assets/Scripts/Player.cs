@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerMovement : MonoBehaviour
+public class Player : MonoBehaviour
 {
     Vector2 rawInput;
 
@@ -18,12 +18,18 @@ public class PlayerMovement : MonoBehaviour
     Vector2 minBounds;
     Vector2 maxBounds;
 
+    Shooter shooter;
+
     //Rigidbody2D myRigdbody;
     
     
 
     bool isAlive = true;
-
+    private void Awake()
+    {
+        shooter = GetComponent<Shooter>();
+        Debug.Log("znalazlem szooter");
+    }
     void Start()
     {
         //myRigdbody = GetComponent<Rigidbody2D>();
@@ -59,5 +65,14 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!isAlive) { return; }
         rawInput = value.Get<Vector2>();
+    }
+    void onFire(InputValue value)
+    {
+        Debug.Log("nacisnieto spacje");
+        if(shooter != null)
+        {
+            
+            shooter.isFiring = value.isPressed;
+        }
     }
 }
