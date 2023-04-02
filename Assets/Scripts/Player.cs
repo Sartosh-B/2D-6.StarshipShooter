@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,33 +5,26 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] float moveSpeed = 5f;
     Vector2 rawInput;
 
-    [SerializeField] float playerSpeed = 1f;
     [SerializeField] float paddingLeft;
     [SerializeField] float paddingRight;
     [SerializeField] float paddingTop;
     [SerializeField] float paddingBottom;
-
 
     Vector2 minBounds;
     Vector2 maxBounds;
 
     Shooter shooter;
 
-    //Rigidbody2D myRigdbody;
-    
-    
-
-    bool isAlive = true;
-    private void Awake()
+    void Awake()
     {
         shooter = GetComponent<Shooter>();
-        Debug.Log("znalazlem szooter");
     }
+
     void Start()
     {
-        //myRigdbody = GetComponent<Rigidbody2D>();
         InitBounds();
     }
 
@@ -50,28 +42,22 @@ public class Player : MonoBehaviour
 
     void Move()
     {
-        Vector2 delta = rawInput * playerSpeed * Time.deltaTime;
+        Vector2 delta = rawInput * moveSpeed * Time.deltaTime;
         Vector2 newPos = new Vector2();
-        newPos.x = Math.Clamp(transform.position.x + delta.x, minBounds.x + paddingLeft, maxBounds.x - paddingRight);
-        newPos.y = Math.Clamp(transform.position.y + delta.y, minBounds.y + paddingBottom, maxBounds.y - paddingTop);
-        transform.position =newPos;
-
-        //bool playerHasHorizontalSpeed = MathF.Abs(myRigdbody.velocity.x) > Mathf.Epsilon;
-        //myAnimator.SetBool("IsRunning", playerHasHorizontalSpeed);
-
+        newPos.x = Mathf.Clamp(transform.position.x + delta.x, minBounds.x + paddingLeft, maxBounds.x - paddingRight);
+        newPos.y = Mathf.Clamp(transform.position.y + delta.y, minBounds.y + paddingBottom, maxBounds.y - paddingTop);
+        transform.position = newPos;
     }
 
     void OnMove(InputValue value)
     {
-        if (!isAlive) { return; }
         rawInput = value.Get<Vector2>();
     }
-    void onFire(InputValue value)
+
+    void OnFire(InputValue value)
     {
-        Debug.Log("nacisnieto spacje");
-        if(shooter != null)
+        if (shooter != null)
         {
-            
             shooter.isFiring = value.isPressed;
         }
     }
