@@ -1,30 +1,30 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    [SerializeField] int health = 50;
-    [SerializeField] ParticleSystem hitEffect;
-    [SerializeField] int pointsForEnemyDeath = 100;
-
     [SerializeField] bool isPlayer;
+    [SerializeField] int health = 50;
+    [SerializeField] int score = 50;
+    [SerializeField] ParticleSystem hitEffect;
+
     [SerializeField] bool applyCameraShake;
     CameraShake cameraShake;
+
     AudioPlayer audioPlayer;
     ScoreKeeper scoreKeeper;
     LevelManager levelManager;
-   
-    private void Awake()
+
+    void Awake()
     {
         cameraShake = Camera.main.GetComponent<CameraShake>();
         audioPlayer = FindObjectOfType<AudioPlayer>();
-        scoreKeeper = FindAnyObjectByType<ScoreKeeper>();
+        scoreKeeper = FindObjectOfType<ScoreKeeper>();
         levelManager = FindObjectOfType<LevelManager>();
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D other)
     {
         DamageDealer damageDealer = other.GetComponent<DamageDealer>();
 
@@ -32,6 +32,7 @@ public class Health : MonoBehaviour
         {
             TakeDamage(damageDealer.GetDamage());
             PlayHitEffect();
+            audioPlayer.PlayDamageClip();
             ShakeCamera();
             damageDealer.Hit();
         }
@@ -40,14 +41,6 @@ public class Health : MonoBehaviour
     public int GetHealth()
     {
         return health;
-    }
-    private void ShakeCamera()
-    {
-        if(cameraShake != null && applyCameraShake)
-        {
-            cameraShake.Play();
-        }
-            
     }
 
     void TakeDamage(int damage)
@@ -59,27 +52,34 @@ public class Health : MonoBehaviour
         }
     }
 
-    private void Die()
-    {       
+    void Die()
+    {
         if (!isPlayer)
         {
-            scoreKeeper.AddToScore(pointsForEnemyDeath);
+            scoreKeeper.ModifyScore(score);
         }
         else
         {
             levelManager.LoadGameOver();
         }
-        Destroy(gameObject);       
+        Destroy(gameObject);
     }
 
     void PlayHitEffect()
     {
-        audioPlayer.PlayDamageClip();
         if (hitEffect != null)
         {
             ParticleSystem instance = Instantiate(hitEffect, transform.position, Quaternion.identity);
             Destroy(instance.gameObject, instance.main.duration + instance.main.startLifetime.constantMax);
         }
-        
+    }
+
+    void ShakeCamera()
+    {
+        if (cameraShake != null && applyCameraShake)
+        {
+            cameraShake.Play();
+        }
     }
 }
+

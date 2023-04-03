@@ -231,9 +231,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48a39db9ddfcaa044915e213e18856f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreText: {fileID: 1895968999}
-  healthBar: {fileID: 455411541}
+  healthSlider: {fileID: 455411541}
   playerHealth: {fileID: 2055101205}
+  scoreText: {fileID: 1895968999}
 --- !u!114 &177859489
 MonoBehaviour:
   m_ObjectHideFlags: 0
